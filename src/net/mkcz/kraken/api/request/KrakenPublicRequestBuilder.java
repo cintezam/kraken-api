@@ -2,8 +2,13 @@ package net.mkcz.kraken.api.request;
 
 import com.mashape.unirest.request.HttpRequestWithBody;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.mashape.unirest.http.Unirest.post;
 
@@ -36,8 +41,11 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("time").map(this::toRequest);
     }
 
-    public Optional<HttpRequestWithBody> assets() {
-        return getTypedSpec("assets").map(this::toRequest);
+    public Optional<HttpRequestWithBody> assets(final AssetInfo info, final List<String> pairs) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("info", info.name().toLowerCase());
+        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        return getTypedSpec("assets").map(typedSpec -> toRequest(typedSpec, params));
     }
 
     public Optional<String> getTypedSpec(final String key) {
@@ -52,9 +60,18 @@ public class KrakenPublicRequestBuilder {
     }
 
     private HttpRequestWithBody toRequest(final String path) {
-        return post(baseUrl + "/{version}/{type}/{path}")
+        return toRequest(path, Collections.emptyMap());
+    }
+
+    private HttpRequestWithBody toRequest(final String path, final Map<String, Object> params) {
+        final HttpRequestWithBody request = post(baseUrl + "/{version}/{type}/{path}")
                 .routeParam("version", version)
                 .routeParam("type", "public")
                 .routeParam("path", path);
+        if (!params.isEmpty())
+        {
+            request.fields(params);
+        }
+        return request;
     }
 }

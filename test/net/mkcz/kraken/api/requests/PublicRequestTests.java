@@ -5,6 +5,8 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 
+import net.mkcz.kraken.api.request.AssetInfo;
+import net.mkcz.kraken.api.request.KrakenPublicRequestBuilder;
 import net.mkcz.kraken.api.request.KrakenRequestBuilder;
 
 import org.junit.Before;
@@ -14,9 +16,15 @@ import org.mockserver.client.server.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 import org.mockserver.model.HttpStatusCode;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static net.mkcz.kraken.api.request.KrakenRequestBuilder.releaseTheKraken;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,29 +43,45 @@ public class PublicRequestTests {
 
     private RequestMocks requestMocks;
     private KrakenRequestBuilder krakenRequestBuilder;
+    private KrakenPublicRequestBuilder krakenPublicRequestBuilder;
 
     @Before
     public void setUp() throws Exception {
         requestMocks = new RequestMocks(mockServerClient, VERSION);
         krakenRequestBuilder = releaseTheKraken(BASE_URL + ":" + PORT, VERSION,
                 ResourceBundle.getBundle("api_0"));
+        krakenPublicRequestBuilder = krakenRequestBuilder.publicRequest();
     }
 
     @Test
     public void shouldCreateValidTimeRequest() throws Exception {
-        validatePublicRequest(krakenRequestBuilder.publicRequest()::time, "public", "Time");
+        validatePublicRequest(krakenPublicRequestBuilder::time, "public", "Time");
     }
 
     @Test
     public void shouldCreateValidAssertsRequest() throws Exception {
-        validatePublicRequest(krakenRequestBuilder.publicRequest()::assets, "public", "Assets");
+        final AssetInfo info = AssetInfo.LEVERAGE;
+        final List<String> pairs = Arrays.asList("XBTCEUR", "XBTCUSD");
+        final Map<String, String> params = new HashMap<>();
+        params.put("info", info.name().toLowerCase());
+        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, pairs), "public", "Assets", params);
     }
+
 
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
                                                                final String type,
                                                                final String expectedPath) throws UnirestException {
+        validatePublicRequest(requestSupplier, type, expectedPath, Collections.emptyMap());
+    }
+
+
+    private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
+                                                               final String type,
+                                                               final String expectedPath,
+                                                               final Map<String, String> params) throws UnirestException {
         // setup request handling
-        requestMocks.handlePublicConnection(expectedPath);
+        requestMocks.handlePublicConnection(expectedPath, params);
 
         //build request
         final Optional<T> optionalRequest = requestSupplier.get();
