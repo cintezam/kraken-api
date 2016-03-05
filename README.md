@@ -1,6 +1,9 @@
 # kraken-api
 Java API library for the Kraken.com exchange
 
+[![Build 
+Status](https://travis-ci.org/mike-mkcz/kraken-api.svg?branch=master)](https://travis-ci.org/mike-mkcz/kraken-api) 
+
 # Dependencies
   - run
     + com.mashape.unirest:unirest-java:1.4.8
