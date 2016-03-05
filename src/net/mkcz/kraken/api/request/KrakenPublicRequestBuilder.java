@@ -83,11 +83,11 @@ public class KrakenPublicRequestBuilder {
         return Optional.empty();
     }
 
-    private HttpRequestWithBody toRequest(final String path) {
+    private HttpRequest toRequest(final String path) {
         return toRequest(path, Collections.emptyMap());
     }
 
-    private HttpRequestWithBody toRequest(final String path, final Map<String, Object> params) {
+    private HttpRequest toRequest(final String path, final Map<String, Object> params) {
         final HttpRequestWithBody request = post(baseUrl + "/{version}/{type}/{path}")
                 .routeParam("version", version)
                 .routeParam("type", "public")
