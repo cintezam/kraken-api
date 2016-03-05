@@ -78,6 +78,14 @@ public class PublicRequestTests {
         validatePublicRequest(() -> krakenPublicRequestBuilder.assetPairs(info, pairs), "public", "AssetPairs", params);
     }
 
+    @Test
+    public void shouldCreateTickerRequest() throws Exception {
+        final List<String> pairs = Arrays.asList("LITEEUR", "XBTCUSD");
+        final Map<String, String> params = new HashMap<>();
+        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        validatePublicRequest(() -> krakenPublicRequestBuilder.ticker(pairs), "public", "Ticker", params);
+    }
+
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
                                                                final String type,
                                                                final String expectedPath) throws UnirestException {

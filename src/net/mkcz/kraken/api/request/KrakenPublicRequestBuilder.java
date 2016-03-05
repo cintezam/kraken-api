@@ -72,6 +72,12 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("assetPairs").map(typedSpec -> toRequest(typedSpec, params));
     }
 
+    public Optional<HttpRequest> ticker(final List<String> pairs) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        return getTypedSpec("ticker").map(typedSpec -> toRequest(typedSpec, params));
+    }
+
     private Optional<String> getTypedSpec(final String key) {
         return getSpec("public." + key);
     }
