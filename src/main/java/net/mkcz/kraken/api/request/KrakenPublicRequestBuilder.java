@@ -102,6 +102,21 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("ohlc").map(typedSpec -> toRequest(typedSpec, params));
     }
 
+    public Optional<HttpRequest> orderBook(final String pair) {
+        return orderBook(pair, Optional.empty());
+    }
+
+    public Optional<HttpRequest> orderBook(final String pair, final int count) {
+        return orderBook(pair, Optional.of(count));
+    }
+
+    private Optional<HttpRequest> orderBook(final String pair, final Optional<Integer> count) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("pair", pair);
+        count.ifPresent(val -> params.put("count", val));
+        return getTypedSpec("orderbook").map(typedSpec -> toRequest(typedSpec, params));
+    }
+
     private Optional<String> getTypedSpec(final String key) {
         return getSpec("public." + key);
     }
