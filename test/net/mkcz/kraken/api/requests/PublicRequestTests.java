@@ -54,12 +54,12 @@ public class PublicRequestTests {
     }
 
     @Test
-    public void shouldCreateValidTimeRequest() throws Exception {
+    public void shouldCreateTimeRequest() throws Exception {
         validatePublicRequest(krakenPublicRequestBuilder::time, "public", "Time");
     }
 
     @Test
-    public void shouldCreateValidAssertsRequest() throws Exception {
+    public void shouldCreateAssertsRequest() throws Exception {
         final AssetInfo info = AssetInfo.LEVERAGE;
         final List<String> pairs = Arrays.asList("XBTCEUR", "XBTCUSD");
         final Map<String, String> params = new HashMap<>();
@@ -68,6 +68,15 @@ public class PublicRequestTests {
         validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, pairs), "public", "Assets", params);
     }
 
+    @Test
+    public void shouldCreateAssetPairsRequest() throws Exception {
+        final AssetInfo info = AssetInfo.FEES;
+        final List<String> pairs = Arrays.asList("XBTCEUR", "LITEUSD");
+        final Map<String, String> params = new HashMap<>();
+        params.put("info", info.name().toLowerCase());
+        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        validatePublicRequest(() -> krakenPublicRequestBuilder.assetPairs(info, pairs), "public", "AssetPairs", params);
+    }
 
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
                                                                final String type,

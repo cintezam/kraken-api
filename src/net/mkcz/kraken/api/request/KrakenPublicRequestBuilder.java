@@ -1,5 +1,6 @@
 package net.mkcz.kraken.api.request;
 
+import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 
 import java.util.Collections;
@@ -37,18 +38,41 @@ public class KrakenPublicRequestBuilder {
         this.apiSpecification = apiSpecification;
     }
 
-    public Optional<HttpRequestWithBody> time() {
+    public Optional<HttpRequest> time() {
         return getTypedSpec("time").map(this::toRequest);
     }
 
-    public Optional<HttpRequestWithBody> assets(final AssetInfo info, final List<String> pairs) {
+    public Optional<HttpRequest> assets(final AssetInfo info) {
+        return assets(info, Collections.singletonList("all"));
+    }
+
+    public Optional<HttpRequest> assets(final List<String> pairs) {
+        return assets(AssetInfo.ALL, pairs);
+    }
+
+    public Optional<HttpRequest> assets(final AssetInfo info, final List<String> pairs) {
         final Map<String, Object> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
         params.put("pair", pairs.stream().collect(Collectors.joining(",")));
         return getTypedSpec("assets").map(typedSpec -> toRequest(typedSpec, params));
     }
 
-    public Optional<String> getTypedSpec(final String key) {
+    public Optional<HttpRequest> assetPairs(final AssetInfo info) {
+        return assetPairs(info, Collections.singletonList("all"));
+    }
+
+    public Optional<HttpRequest> assetPairs(final List<String> pairs) {
+        return assetPairs(AssetInfo.ALL, pairs);
+    }
+
+    public Optional<HttpRequest> assetPairs(final AssetInfo info, final List<String> pairs) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("info", info.name().toLowerCase());
+        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        return getTypedSpec("assetPairs").map(typedSpec -> toRequest(typedSpec, params));
+    }
+
+    private Optional<String> getTypedSpec(final String key) {
         return getSpec("public." + key);
     }
 
