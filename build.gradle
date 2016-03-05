@@ -1,12 +1,29 @@
 group 'net.mkcz'
-version '1.0-SNAPSHOT'
+version '0.1'
 
 apply plugin: 'java'
+apply plugin: 'idea'
+
+ext {
+    fullName = 'KrakenApiJ'
+    fullDescription = 'Java implementation of the Kraken API'
+    teamname = 'mkcz.net'
+    siteUrl = 'https://github.com/mike-mkcz/kraken-api'
+    sourceUrl = 'https://github.com/mike-mkcz/kraken-api.git'
+}
+
+jar {
+    manifest.attributes('Built-by': System.properties['user.name'],
+            'Bundle-Name': fullName,
+            'Bundle-Vendor': teamname,
+            'Bundle-Description': fullDescription,
+            'Bundle-DocURL': siteUrl
+    )
+}
 
 repositories {
     mavenCentral()
 }
-
 
 dependencies {
     compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.8'
