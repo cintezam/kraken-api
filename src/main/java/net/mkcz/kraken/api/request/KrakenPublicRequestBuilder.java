@@ -132,6 +132,21 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("trades").map(typedSpec -> toRequest(typedSpec, params));
     }
 
+    public Optional<HttpRequest> spread(final String pair) {
+        return spread(pair, Optional.empty());
+    }
+
+    public Optional<HttpRequest> spread(final String pair, final long since) {
+        return spread(pair, Optional.of(since));
+    }
+
+    private Optional<HttpRequest> spread(final String pair, final Optional<Long> since) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("pair", pair);
+        since.ifPresent(val -> params.put("since", val));
+        return getTypedSpec("spread").map(typedSpec -> toRequest(typedSpec, params));
+    }
+
     private Optional<String> getTypedSpec(final String key) {
         return getSpec("public." + key);
     }

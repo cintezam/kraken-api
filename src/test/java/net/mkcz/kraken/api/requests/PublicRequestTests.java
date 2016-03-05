@@ -118,6 +118,16 @@ public class PublicRequestTests {
         validatePublicRequest(() -> krakenPublicRequestBuilder.trades(pair, since), "public", "Trades", params);
     }
 
+    @Test
+    public void shouldCreateSpreadRequest() throws Exception {
+        final String pair = "EURUSD";
+        final long since = 15;
+        final Map<String, String> params = new HashMap<>();
+        params.put("pair", pair);
+        params.put("since", String.valueOf(since));
+        validatePublicRequest(() -> krakenPublicRequestBuilder.spread(pair, since), "public", "Spread", params);
+    }
+
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
                                                                final String type,
                                                                final String expectedPath) throws UnirestException {
