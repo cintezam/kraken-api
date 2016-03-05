@@ -2,9 +2,11 @@
 Java API library for the Kraken.com exchange
 
 # Dependencies
-  + com.google.http-client:google-http-client:1.20.0 or above
-  + com.google.code.gson:gson:2.6.2 or above
-  + commons-logging:commons-logging:1.2 or above
+  - run
+    + com.mashape.unirest:unirest-java:1.4.8
+  - test
+    + org.mock-server:mockserver-netty:3.10.2
+    + org.assertj:assertj-core:3.3.0
 
 # License
 see the LICENSE file 
