@@ -1,11 +1,11 @@
 package net.mkcz.kraken.api.request;
 
-import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.HttpRequestWithBody;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.mashape.unirest.http.Unirest.get;
+import static com.mashape.unirest.http.Unirest.post;
 
 /**
  * Created by cintezam on 05/03/16.
@@ -32,11 +32,11 @@ public class KrakenPublicRequestBuilder {
         this.apiSpecification = apiSpecification;
     }
 
-    public Optional<GetRequest> time() {
+    public Optional<HttpRequestWithBody> time() {
         return getTypedSpec("time").map(this::toRequest);
     }
 
-    public Optional<GetRequest> assets() {
+    public Optional<HttpRequestWithBody> assets() {
         return getTypedSpec("assets").map(this::toRequest);
     }
 
@@ -51,8 +51,8 @@ public class KrakenPublicRequestBuilder {
         return Optional.empty();
     }
 
-    private GetRequest toRequest(final String path) {
-        return get(baseUrl + "/{version}/{type}/{path}")
+    private HttpRequestWithBody toRequest(final String path) {
+        return post(baseUrl + "/{version}/{type}/{path}")
                 .routeParam("version", version)
                 .routeParam("type", "public")
                 .routeParam("path", path);

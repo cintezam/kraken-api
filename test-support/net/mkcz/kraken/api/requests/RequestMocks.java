@@ -12,8 +12,7 @@ import static org.mockserver.model.HttpResponse.response;
  * Created by cintezam on 05/03/16.
  */
 public class RequestMocks {
-    private static final String GET = "GET";
-    private static final String POST = "GET";
+    private static final String POST = "POST";
     private final MockServerClient mockServerClient;
     private final String version;
 
@@ -24,14 +23,14 @@ public class RequestMocks {
     }
 
     public void handlePublicConnection(final String path) {
-        handleConnection("public", GET, path);
+        handleConnection("public", path);
     }
 
-    private void handleConnection(final String type, final String method, final String path) {
+    private void handleConnection(final String type, final String path) {
         mockServerClient
                 .when(
                         request()
-                                .withMethod(method)
+                                .withMethod(POST)
                                 .withPath("/" + version + "/" + type + "/" + path)
                 )
                 .respond(
