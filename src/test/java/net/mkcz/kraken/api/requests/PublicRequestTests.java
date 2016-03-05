@@ -43,14 +43,12 @@ public class PublicRequestTests {
     private MockServerClient mockServerClient;
 
     private RequestMocks requestMocks;
-    private KrakenRequestBuilder krakenRequestBuilder;
     private KrakenPublicRequestBuilder krakenPublicRequestBuilder;
 
     @Before
     public void setUp() throws Exception {
         requestMocks = new RequestMocks(mockServerClient, VERSION);
-        krakenRequestBuilder = releaseTheKraken(BASE_URL + ":" + PORT, VERSION,
-                ResourceBundle.getBundle("api_0"));
+        final KrakenRequestBuilder krakenRequestBuilder = releaseTheKraken(BASE_URL + ":" + PORT, VERSION, ResourceBundle.getBundle("api_0"));
         krakenPublicRequestBuilder = krakenRequestBuilder.publicRequest();
     }
 
