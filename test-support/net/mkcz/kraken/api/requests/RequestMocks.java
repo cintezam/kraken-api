@@ -12,6 +12,8 @@ import static org.mockserver.model.HttpResponse.response;
  * Created by cintezam on 05/03/16.
  */
 public class RequestMocks {
+    private static final String GET = "GET";
+    private static final String POST = "GET";
     private final MockServerClient mockServerClient;
     private final String version;
 
@@ -21,8 +23,21 @@ public class RequestMocks {
         this.version = version;
     }
 
-    public void handleTime() {
-        mockServerClient.when(request().withPath("/" + version + "/public/Time"))
-                .respond(response().withStatusCode(HttpStatusCode.OK_200.code()).withDelay(TimeUnit.SECONDS, 1));
+    public void handlePublicConnection(final String path) {
+        handleConnection("public", GET, path);
+    }
+
+    private void handleConnection(final String type, final String method, final String path) {
+        mockServerClient
+                .when(
+                        request()
+                                .withMethod(method)
+                                .withPath("/" + version + "/" + type + "/" + path)
+                )
+                .respond(
+                        response().
+                                withStatusCode(HttpStatusCode.OK_200.code())
+                                .withDelay(TimeUnit.SECONDS, 1)
+                );
     }
 }

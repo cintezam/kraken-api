@@ -1,10 +1,11 @@
 package net.mkcz.kraken.api.request;
 
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static com.mashape.unirest.http.Unirest.get;
 
 /**
  * Created by cintezam on 05/03/16.
@@ -32,22 +33,28 @@ public class KrakenPublicRequestBuilder {
     }
 
     public Optional<GetRequest> time() {
-        return keyedUrl("time").map(Unirest::get);
+        return getTypedSpec("time").map(this::toRequest);
     }
 
-    private Optional<String> keyedUrl(final String resourceKey) {
-        return url("public." + resourceKey);
+    public Optional<GetRequest> assets() {
+        return getTypedSpec("assets").map(this::toRequest);
     }
 
-    private Optional<String> url(final String resourceKey) {
-        if (apiSpecification.containsKey(resourceKey)) {
-            final String urlBuilder = baseUrl + "/" +
-                    version +
-                    "/public/" +
-                    apiSpecification.getString(resourceKey);
-            return Optional.of(urlBuilder);
+    public Optional<String> getTypedSpec(final String key) {
+        return getSpec("public." + key);
+    }
+
+    private Optional<String> getSpec(final String key) {
+        if (apiSpecification.containsKey(key)) {
+            return Optional.of(apiSpecification.getString(key));
         }
         return Optional.empty();
+    }
 
+    private GetRequest toRequest(final String path) {
+        return get(baseUrl + "/{version}/{type}/{path}")
+                .routeParam("version", version)
+                .routeParam("type", "public")
+                .routeParam("path", path);
     }
 }

@@ -2,7 +2,8 @@ package net.mkcz.kraken.api.requests;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
 
 import net.mkcz.kraken.api.request.KrakenRequestBuilder;
 
@@ -15,6 +16,7 @@ import org.mockserver.model.HttpStatusCode;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 import static net.mkcz.kraken.api.request.KrakenRequestBuilder.releaseTheKraken;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,17 +45,33 @@ public class PublicRequestTests {
 
     @Test
     public void shouldCreateValidTimeRequest() throws Exception {
-        //setup for time handling
-        requestMocks.handleTime();
+        validatePublicRequest(krakenRequestBuilder.publicRequest()::time, "public", "Time");
+    }
+
+    @Test
+    public void shouldCreateValidAssertsRequest() throws Exception {
+        validatePublicRequest(krakenRequestBuilder.publicRequest()::assets, "public", "Assets");
+    }
+
+    private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
+                                                               final String type,
+                                                               final String expectedPath) throws UnirestException {
+        // setup request handling
+        requestMocks.handlePublicConnection(expectedPath);
 
         //build request
-        Optional<GetRequest> optionalTimeGet = krakenRequestBuilder.publicRequest().time();
-        assertThat(optionalTimeGet).isPresent();
-        GetRequest getRequest = optionalTimeGet.get();
-        assertThat(getRequest.getUrl()).isEqualTo(BASE_URL + ":" + PORT + "/" + VERSION + "/public/Time");
+        final Optional<T> optionalRequest = requestSupplier.get();
+        assertThat(optionalRequest).isPresent();
+        T request = optionalRequest.get();
+        validateUrl(request.getUrl(), type, expectedPath);
 
         //run request
-        HttpResponse<JsonNode> response = getRequest.asJson();
+        final HttpResponse<JsonNode> response = request.asJson();
         assertThat(response.getStatus()).isEqualTo(HttpStatusCode.OK_200.code());
     }
+
+    private void validateUrl(final String actualUrl, final String type, final String expectedPath) {
+        assertThat(actualUrl).isEqualTo(BASE_URL + ":" + PORT + "/" + VERSION + "/" + type + "/" + expectedPath);
+    }
+
 }
