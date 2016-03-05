@@ -78,6 +78,30 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("ticker").map(typedSpec -> toRequest(typedSpec, params));
     }
 
+    public Optional<HttpRequest> ohlc(final String pair) {
+        return ohlc(pair, OHLCInterval.MINUTE, Optional.empty());
+    }
+
+    public Optional<HttpRequest> ohlc(final String pair, final OHLCInterval interval) {
+        return ohlc(pair, interval, Optional.empty());
+    }
+
+    public Optional<HttpRequest> ohlc(final String pair, final long since) {
+        return ohlc(pair, OHLCInterval.MINUTE, Optional.of(since));
+    }
+
+    public Optional<HttpRequest> ohlc(final String pair, final OHLCInterval interval, final long since) {
+        return ohlc(pair, interval, Optional.of(since));
+    }
+
+    private Optional<HttpRequest> ohlc(final String pair, final OHLCInterval interval, final Optional<Long> since) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("pair", pair);
+        params.put("interval", interval.getDuration());
+        since.ifPresent(val -> params.put("since", val));
+        return getTypedSpec("ohlc").map(typedSpec -> toRequest(typedSpec, params));
+    }
+
     private Optional<String> getTypedSpec(final String key) {
         return getSpec("public." + key);
     }

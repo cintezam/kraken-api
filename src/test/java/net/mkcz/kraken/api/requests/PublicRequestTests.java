@@ -8,6 +8,7 @@ import com.mashape.unirest.request.HttpRequest;
 import net.mkcz.kraken.api.request.AssetInfo;
 import net.mkcz.kraken.api.request.KrakenPublicRequestBuilder;
 import net.mkcz.kraken.api.request.KrakenRequestBuilder;
+import net.mkcz.kraken.api.request.OHLCInterval;
 import net.mkcz.testsupport.kraken.api.requests.RequestMocks;
 
 import org.junit.Before;
@@ -83,6 +84,18 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("pair", pairs.stream().collect(Collectors.joining(",")));
         validatePublicRequest(() -> krakenPublicRequestBuilder.ticker(pairs), "public", "Ticker", params);
+    }
+
+    @Test
+    public void shouldCreateOHLRRequest() throws Exception {
+        final String pair = "LITEXBTC";
+        final OHLCInterval interval = OHLCInterval.FOUR_HOURS;
+        final long since = System.currentTimeMillis();
+        final Map<String, String> params = new HashMap<>();
+        params.put("pair", pair);
+        params.put("interval", String.valueOf(interval.getDuration()));
+        params.put("since", String.valueOf(since));
+        validatePublicRequest(() -> krakenPublicRequestBuilder.ohlc(pair, interval, since), "public", "OHLC", params);
     }
 
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
