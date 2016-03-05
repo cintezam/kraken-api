@@ -19,7 +19,7 @@ import static com.mashape.unirest.http.Unirest.post;
 public class KrakenPublicRequestBuilder {
     private static KrakenPublicRequestBuilder INSTANCE;
 
-    public static KrakenPublicRequestBuilder breleaseTheKraken(final String baseUrl, final String version, final ResourceBundle apiSpecification) {
+    public static KrakenPublicRequestBuilder releaseTheKraken(final String baseUrl, final String version, final ResourceBundle apiSpecification) {
         if (null == INSTANCE) {
             INSTANCE = new KrakenPublicRequestBuilder(baseUrl, version, apiSpecification);
         }
