@@ -42,12 +42,16 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("time").map(this::toRequest);
     }
 
+    public Optional<HttpRequest> assets() {
+        return assets(AssetInfo.INFO, Collections.singletonList("all"));
+    }
+
     public Optional<HttpRequest> assets(final AssetInfo info) {
         return assets(info, Collections.singletonList("all"));
     }
 
     public Optional<HttpRequest> assets(final List<String> pairs) {
-        return assets(AssetInfo.ALL, pairs);
+        return assets(AssetInfo.INFO, pairs);
     }
 
     public Optional<HttpRequest> assets(final AssetInfo info, final List<String> pairs) {
@@ -57,12 +61,16 @@ public class KrakenPublicRequestBuilder {
         return getTypedSpec("assets").map(typedSpec -> toRequest(typedSpec, params));
     }
 
+    public Optional<HttpRequest> assetPairs() {
+        return assetPairs(AssetInfo.INFO, Collections.singletonList("all"));
+    }
+
     public Optional<HttpRequest> assetPairs(final AssetInfo info) {
         return assetPairs(info, Collections.singletonList("all"));
     }
 
     public Optional<HttpRequest> assetPairs(final List<String> pairs) {
-        return assetPairs(AssetInfo.ALL, pairs);
+        return assetPairs(AssetInfo.INFO, pairs);
     }
 
     public Optional<HttpRequest> assetPairs(final AssetInfo info, final List<String> pairs) {
