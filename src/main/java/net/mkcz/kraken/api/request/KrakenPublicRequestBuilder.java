@@ -68,21 +68,26 @@ public class KrakenPublicRequestBuilder {
     }
 
     public Optional<HttpRequest> assetPairs() {
-        return assetPairs(AssetInfo.INFO, Collections.singletonList("all"));
+        return assetPairs(AssetInfo.INFO, Optional.empty());
     }
 
     public Optional<HttpRequest> assetPairs(final AssetInfo info) {
-        return assetPairs(info, Collections.singletonList("all"));
+        return assetPairs(info, Optional.empty());
     }
 
     public Optional<HttpRequest> assetPairs(final List<String> pairs) {
-        return assetPairs(AssetInfo.INFO, pairs);
+        return assetPairs(AssetInfo.INFO, Optional.of(pairs));
     }
 
     public Optional<HttpRequest> assetPairs(final AssetInfo info, final List<String> pairs) {
+        return assetPairs(info, Optional.of(pairs));
+    }
+
+    private Optional<HttpRequest> assetPairs(final AssetInfo info, final Optional<List<String>> pairs) {
+
         final Map<String, Object> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
-        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        pairs.ifPresent(vals -> params.put("pair", vals.stream().collect(Collectors.joining(","))));
         return getTypedSpec("assetPairs").map(typedSpec -> toRequest(typedSpec, params));
     }
 
