@@ -8,8 +8,9 @@ import java.util.ResourceBundle;
 public class KrakenRequestBuilder {
     private static KrakenRequestBuilder INSTANCE;
 
-    public static KrakenRequestBuilder releaseTheKraken(final String baseUrl, final String version, final ResourceBundle apiSpecification) {
+    public static KrakenRequestBuilder releaseTheKraken(final String baseUrl, final String version) {
         if (null == INSTANCE) {
+            final ResourceBundle apiSpecification = ResourceBundle.getBundle("api_" + version);
             INSTANCE = new KrakenRequestBuilder(baseUrl, version, apiSpecification);
         }
         return INSTANCE;

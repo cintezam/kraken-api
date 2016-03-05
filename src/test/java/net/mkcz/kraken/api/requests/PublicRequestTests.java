@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,7 @@ public class PublicRequestTests {
     @Before
     public void setUp() throws Exception {
         requestMocks = new RequestMocks(mockServerClient, VERSION);
-        final KrakenRequestBuilder krakenRequestBuilder = releaseTheKraken(BASE_URL + ":" + PORT, VERSION, ResourceBundle.getBundle("api_0"));
+        final KrakenRequestBuilder krakenRequestBuilder = releaseTheKraken(BASE_URL + ":" + PORT, VERSION);
         krakenPublicRequestBuilder = krakenRequestBuilder.publicRequest();
     }
 

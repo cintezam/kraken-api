@@ -14,7 +14,6 @@ public class Main {
 
         ResourceBundle apiSpecification = ResourceBundle.getBundle("api_" + version);
 
-        KrakenRequestBuilder krakenRequestBuilder = KrakenRequestBuilder.releaseTheKraken(baseUrl, version, apiSpecification);
-        krakenRequestBuilder.publicRequest();
+        KrakenRequestBuilder krakenRequestBuilder = KrakenRequestBuilder.releaseTheKraken(baseUrl, version);
     }
 }
