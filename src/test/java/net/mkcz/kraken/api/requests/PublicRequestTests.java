@@ -58,13 +58,13 @@ public class PublicRequestTests {
     }
 
     @Test
-    public void shouldCreateAssertsRequest() throws Exception {
+    public void shouldCreateAssetsRequest() throws Exception {
         final AssetInfo info = AssetInfo.LEVERAGE;
-        final List<String> pairs = Arrays.asList("XBTCEUR", "XBTCUSD");
+        final List<String> assets = Arrays.asList("XBTCEUR", "XBTCUSD");
         final Map<String, String> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
-        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, pairs), "public", "Assets", params);
+        params.put("asset", assets.stream().collect(Collectors.joining(",")));
+        validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, assets), "public", "Assets", params);
     }
 
     @Test

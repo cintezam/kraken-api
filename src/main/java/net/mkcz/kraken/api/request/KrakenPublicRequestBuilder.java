@@ -47,17 +47,23 @@ public class KrakenPublicRequestBuilder {
     }
 
     public Optional<HttpRequest> assets(final AssetInfo info) {
-        return assets(info, Collections.singletonList("all"));
+        return assets(info, Optional.empty());
     }
 
-    public Optional<HttpRequest> assets(final List<String> pairs) {
-        return assets(AssetInfo.INFO, pairs);
+    public Optional<HttpRequest> assets(final List<String> assets) {
+        return assets(AssetInfo.INFO, Optional.of(assets));
     }
 
-    public Optional<HttpRequest> assets(final AssetInfo info, final List<String> pairs) {
+    public Optional<HttpRequest> assets(final AssetInfo info, final List<String> assets) {
+        return assets(info, Optional.of(assets));
+    }
+
+    private Optional<HttpRequest> assets(final AssetInfo info, final Optional<List<String>> assets) {
         final Map<String, Object> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
-        params.put("pair", pairs.stream().collect(Collectors.joining(",")));
+        // no other option here, so not exposing
+        params.put("aclass", "currency");
+        assets.ifPresent(vals -> params.put("asset", vals.stream().collect(Collectors.joining(","))));
         return getTypedSpec("assets").map(typedSpec -> toRequest(typedSpec, params));
     }
 
