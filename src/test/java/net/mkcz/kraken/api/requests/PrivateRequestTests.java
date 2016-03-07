@@ -56,6 +56,25 @@ public class PrivateRequestTests {
         validatePrivateRequest(() -> krakenPrivateRequestBuilder.balance(OTP), "Balance", API_SIGN, NONCE, OTP);
     }
 
+    @Test
+    public void shouldCreateTradeBalanceRequest() throws Exception {
+        final String asset = "ZUSD";
+        final Map<String, String> params = new HashMap<>();
+        params.put("asset", asset);
+        params.put("aclass", "currency");
+        validatePrivateRequest(() -> krakenPrivateRequestBuilder.tradeBalance(OTP, asset), "TradeBalance", API_SIGN, NONCE, OTP, params);
+    }
+
+    @Test
+    public void shouldCreateOpenOrdersRequest() throws Exception {
+        final boolean includeTrades = true;
+        final String userRef = "someRef";
+        final Map<String, String> params = new HashMap<>();
+        params.put("trades", String.valueOf(includeTrades));
+        params.put("userref", userRef);
+        validatePrivateRequest(() -> krakenPrivateRequestBuilder.openOrders(OTP, includeTrades, userRef), "OpenOrders", API_SIGN, NONCE, OTP, params);
+    }
+
     private <T extends HttpRequest> void validatePrivateRequest(final Supplier<Optional<T>> requestSupplier,
                                                                 final String expectedPath,
                                                                 final String apiSign,

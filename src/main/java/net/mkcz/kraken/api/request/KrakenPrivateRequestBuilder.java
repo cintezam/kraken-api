@@ -57,6 +57,36 @@ public class KrakenPrivateRequestBuilder {
         return getTypedSpec("balance").map(typeSpec -> toRequest(typeSpec, otp));
     }
 
+    public Optional<HttpRequest> tradeBalance(final Optional<Long> otp, final String asset) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("asset", asset);
+        params.put("aclass", "currency");
+        return getTypedSpec("tradeBalance").map(typeSpec -> toRequest(typeSpec, otp, params));
+    }
+
+    public Optional<HttpRequest> openOrders(final Optional<Long> otp) {
+        return openOrders(otp, false, Optional.empty());
+    }
+
+    public Optional<HttpRequest> openOrders(final Optional<Long> otp, final boolean includeTrades) {
+        return openOrders(otp, includeTrades, Optional.empty());
+    }
+
+    public Optional<HttpRequest> openOrders(final Optional<Long> otp, final String userRef) {
+        return openOrders(otp, false, Optional.of(userRef));
+    }
+
+    public Optional<HttpRequest> openOrders(final Optional<Long> otp, final boolean includeTrades, final String userRef) {
+        return openOrders(otp, includeTrades, Optional.of(userRef));
+    }
+
+    private Optional<HttpRequest> openOrders(final Optional<Long> otp, final boolean includeTrades, final Optional<String> userRef) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("trades", includeTrades);
+        userRef.ifPresent(val -> params.put("userref", val));
+        return getTypedSpec("openOrders").map(typedSpec -> toRequest(typedSpec, otp, params));
+    }
+
     private Optional<String> getTypedSpec(final String key) {
         return getSpec("private." + key);
     }
