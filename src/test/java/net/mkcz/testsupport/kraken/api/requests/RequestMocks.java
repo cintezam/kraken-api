@@ -7,6 +7,7 @@ import org.mockserver.model.HttpStatusCode;
 import org.mockserver.model.Parameter;
 import org.mockserver.model.ParameterBody;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -30,13 +31,20 @@ public class RequestMocks {
     }
 
     public void handlePublicConnection(final String path, final Map<String, String> params) {
-        handleConnection("public", path, params);
+        handleConnection("public", path, Collections.emptyMap(), params);
     }
 
-    private void handleConnection(final String type, final String path, final Map<String, String> params) {
+    public void handlePrivateConnection(final String path, final Map<String, String> headers, final Map<String, String> params) {
+        handleConnection("private", path, headers, params);
+    }
+
+    private void handleConnection(final String type, final String path, final Map<String, String> headers, final Map<String, String> params) {
         final HttpRequest httpRequest = request()
                 .withMethod(POST)
                 .withPath("/" + version + "/" + type + "/" + path);
+        if (!headers.isEmpty()) {
+            headers.entrySet().forEach(header -> httpRequest.withHeader(header.getKey(), header.getValue()));
+        }
         if (!params.isEmpty()) {
             final List<Parameter> parameters = params.entrySet().stream()
                     .map(entry -> new Parameter(entry.getKey(), entry.getValue()))
