@@ -54,7 +54,7 @@ public class PublicRequestTests {
 
     @Test
     public void shouldCreateTimeRequest() throws Exception {
-        validatePublicRequest(krakenPublicRequestBuilder::time, "public", "Time");
+        validatePublicRequest(krakenPublicRequestBuilder::time, "Time");
     }
 
     @Test
@@ -64,7 +64,7 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
         params.put("asset", assets.stream().collect(Collectors.joining(",")));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, assets), "public", "Assets", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, assets), "Assets", params);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
         params.put("pair", pairs.stream().collect(Collectors.joining(",")));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.assetPairs(info, pairs), "public", "AssetPairs", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.assetPairs(info, pairs), "AssetPairs", params);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PublicRequestTests {
         final List<String> pairs = Arrays.asList("LITEEUR", "XBTCUSD");
         final Map<String, String> params = new HashMap<>();
         params.put("pair", pairs.stream().collect(Collectors.joining(",")));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.ticker(pairs), "public", "Ticker", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.ticker(pairs), "Ticker", params);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class PublicRequestTests {
         params.put("pair", pair);
         params.put("interval", String.valueOf(interval.getDuration()));
         params.put("since", String.valueOf(since));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.ohlc(pair, interval, since), "public", "OHLC", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.ohlc(pair, interval, since), "OHLC", params);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("pair", pair);
         params.put("count", String.valueOf(count));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.orderBook(pair, count), "public", "Depth", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.orderBook(pair, count), "Depth", params);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("pair", pair);
         params.put("since", String.valueOf(since));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.trades(pair, since), "public", "Trades", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.trades(pair, since), "Trades", params);
     }
 
     @Test
@@ -124,18 +124,16 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("pair", pair);
         params.put("since", String.valueOf(since));
-        validatePublicRequest(() -> krakenPublicRequestBuilder.spread(pair, since), "public", "Spread", params);
+        validatePublicRequest(() -> krakenPublicRequestBuilder.spread(pair, since), "Spread", params);
     }
 
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
-                                                               final String type,
                                                                final String expectedPath) throws UnirestException {
-        validatePublicRequest(requestSupplier, type, expectedPath, Collections.emptyMap());
+        validatePublicRequest(requestSupplier, expectedPath, Collections.emptyMap());
     }
 
 
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
-                                                               final String type,
                                                                final String expectedPath,
                                                                final Map<String, String> params) throws UnirestException {
         // setup request handling
@@ -145,15 +143,15 @@ public class PublicRequestTests {
         final Optional<T> optionalRequest = requestSupplier.get();
         assertThat(optionalRequest).isPresent();
         T request = optionalRequest.get();
-        validateUrl(request.getUrl(), type, expectedPath);
+        validateUrl(request.getUrl(), expectedPath);
 
         //run request
         final HttpResponse<JsonNode> response = request.asJson();
         assertThat(response.getStatus()).isEqualTo(HttpStatusCode.OK_200.code());
     }
 
-    private void validateUrl(final String actualUrl, final String type, final String expectedPath) {
-        assertThat(actualUrl).isEqualTo(BASE_URL + ":" + PORT + "/" + VERSION + "/" + type + "/" + expectedPath);
+    private void validateUrl(final String actualUrl, final String expectedPath) {
+        assertThat(actualUrl).isEqualTo(BASE_URL + ":" + PORT + "/" + VERSION + "/public/" + expectedPath);
     }
 
 }
