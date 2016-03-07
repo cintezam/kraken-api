@@ -64,6 +64,7 @@ public class PublicRequestTests {
         final Map<String, String> params = new HashMap<>();
         params.put("info", info.name().toLowerCase());
         params.put("asset", assets.stream().collect(Collectors.joining(",")));
+        params.put("aclass", "currency");
         validatePublicRequest(() -> krakenPublicRequestBuilder.assets(info, assets), "Assets", params);
     }
 
