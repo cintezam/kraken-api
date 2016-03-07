@@ -132,7 +132,6 @@ public class PublicRequestTests {
         validatePublicRequest(requestSupplier, expectedPath, Collections.emptyMap());
     }
 
-
     private <T extends HttpRequest> void validatePublicRequest(final Supplier<Optional<T>> requestSupplier,
                                                                final String expectedPath,
                                                                final Map<String, String> params) throws UnirestException {
