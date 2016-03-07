@@ -1,6 +1,8 @@
 package net.mkcz.kraken.api.request;
 
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Created by cintezam on 05/03/16.
@@ -31,7 +33,7 @@ public class KrakenRequestBuilder {
         return KrakenPublicRequestBuilder.releaseTheKraken(baseUrl, version, apiSpecification);
     }
 
-    public KrakenPrivateRequestBuilder privateRequest() {
-        return KrakenPrivateRequestBuilder.releaseTheKraken(baseUrl, version, apiSpecification);
+    public KrakenPrivateRequestBuilder privateRequest(final String apiKey, final Supplier<Long> nonceSupplier, final Function<String, String> apiSignSupplier) {
+        return KrakenPrivateRequestBuilder.releaseTheKraken(baseUrl, version, apiSpecification, apiKey, nonceSupplier, apiSignSupplier);
     }
 }
