@@ -2,7 +2,7 @@
 Java API library for the Kraken.com exchange
 
 [![Build 
-Status](https://travis-ci.org/mike-mkcz/kraken-api.svg?branch=master)](https://travis-ci.org/mike-mkcz/kraken-api) 
+Status](https://travis-ci.org/cintezam/kraken-api.svg?branch=master)](https://travis-ci.org/cintezam/kraken-api) 
 
 # Dependencies
   - run
